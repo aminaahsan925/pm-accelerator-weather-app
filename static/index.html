@@ -4,102 +4,200 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weather App - Amina Abru | PM Accelerator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
   body {
-    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    background: #f4f6f8;
-    color: #1a1a1a;
+    font-family: "Schibsted Grotesk", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #F2EFE9;
+    color: #1A1813;
     margin: 0;
     padding: 0;
   }
-  header {
-    background: #123a5c;
-    color: #fff;
-    padding: 20px 24px;
+  main { max-width: 720px; margin: 0 auto; padding: 56px 24px 72px; }
+
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #9A958A;
+    margin: 0 0 8px;
   }
-  header h1 { margin: 0; font-size: 22px; }
-  header p { margin: 4px 0 0; font-size: 14px; color: #c9d8e5; }
-  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 {
+    font-size: 56px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin: 0 0 8px;
+  }
+  .standfirst {
+    font-size: 17px;
+    line-height: 1.5;
+    color: #6B675C;
+    margin: 0 0 40px;
+    max-width: 520px;
+  }
+
   section {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
+    border-top: 1px solid #DDD8CF;
+    padding: 32px 0;
   }
-  section h2 { margin: 0 0 12px; font-size: 18px; }
-  label { display: block; font-size: 14px; margin-bottom: 4px; }
+  section h2 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6B675C;
+    margin: 0 0 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    color: #6B675C;
+    margin-bottom: 6px;
+  }
   input {
     width: 100%;
-    padding: 10px;
-    font-size: 15px;
-    border: 1px solid #bbb;
-    border-radius: 6px;
-    margin-bottom: 12px;
-  }
-  .row { display: flex; gap: 12px; }
-  .row > div { flex: 1; }
-  button {
-    background: #123a5c;
-    color: #fff;
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 500;
+    color: #1A1813;
+    background: transparent;
     border: none;
-    padding: 10px 18px;
+    border-bottom: 2px solid #1A1813;
+    border-radius: 0;
+    padding: 8px 2px;
+    margin-bottom: 20px;
+    outline: none;
+  }
+  input::placeholder { color: #9A958A; font-weight: 400; }
+  input:focus { border-bottom-color: #DD4B32; }
+  input[type="date"] { font-size: 17px; }
+
+  .row { display: flex; gap: 24px; }
+  .row > div { flex: 1; }
+
+  button {
+    font-family: inherit;
     font-size: 15px;
-    border-radius: 6px;
+    font-weight: 700;
+    background: #1A1813;
+    color: #F2EFE9;
+    border: none;
+    padding: 13px 24px;
+    border-radius: 999px;
     cursor: pointer;
   }
-  button:hover { background: #0d2c46; }
-  button.secondary { background: #e7ebee; color: #123a5c; }
-  button.secondary:hover { background: #d6dde3; }
-  button.danger { background: #b3261e; padding: 6px 12px; font-size: 13px; }
-  button.danger:hover { background: #8f1d17; }
-  .result {
-    background: #eef4f8;
-    border-radius: 6px;
-    padding: 14px;
-    margin-top: 12px;
-    font-size: 15px;
-    line-height: 1.6;
-    display: none;
+  button:hover { background: #DD4B32; }
+
+  .textbtn {
+    background: none;
+    color: #1A1813;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 0;
+    border-bottom: 1px solid #1A1813;
+    cursor: pointer;
   }
+  .textbtn:hover { color: #DD4B32; border-bottom-color: #DD4B32; background: none; }
+
+  .result { display: none; margin-top: 28px; }
+  .result .place {
+    font-size: 22px;
+    font-weight: 700;
+    color: #DD4B32;
+    margin: 0;
+  }
+  .result .temp {
+    font-size: 72px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin: 4px 0 8px;
+  }
+  .result .sentence {
+    font-size: 17px;
+    line-height: 1.5;
+    color: #6B675C;
+    margin: 0 0 10px;
+  }
+  .result a, .record a { color: #1A1813; }
+
   .error {
-    background: #fdecea;
-    color: #8f1d17;
-    border-radius: 6px;
-    padding: 12px 14px;
-    margin-top: 12px;
-    font-size: 14px;
+    color: #DD4B32;
+    font-size: 15px;
+    margin-top: 16px;
     display: none;
   }
+
+  .toolbar { display: flex; gap: 20px; margin-bottom: 8px; flex-wrap: wrap; }
   .record {
-    border-bottom: 1px solid #eee;
-    padding: 12px 0;
-    font-size: 14px;
-    line-height: 1.6;
+    border-top: 1px solid #DDD8CF;
+    padding: 20px 0;
+    line-height: 1.55;
   }
-  .record:last-child { border-bottom: none; }
-  .record strong { font-size: 15px; }
-  .record a { color: #123a5c; }
-  .toolbar { display: flex; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
-  .muted { color: #666; font-size: 14px; }
+  .record .r-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .record .r-place { font-size: 19px; font-weight: 700; }
+  .record .r-temp {
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .record .r-dates { font-size: 14px; color: #6B675C; }
+  .record .r-meta { font-size: 14px; color: #6B675C; margin: 4px 0 8px; }
+  .record .r-actions { font-size: 14px; }
+  .record .r-actions button {
+    background: none;
+    color: #DD4B32;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+  }
+  .record .r-actions button:hover { text-decoration: underline; }
+  .muted { color: #9A958A; font-size: 15px; }
+
+  @media (max-width: 560px) {
+    main { padding: 36px 20px 56px; }
+    h1 { font-size: 44px; }
+    .result .temp { font-size: 60px; }
+    .row { flex-direction: column; gap: 0; }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Weather App</h1>
-  <p>Amina Abru | PM Accelerator - AI Engineer Intern, Backend track</p>
-</header>
-
 <main>
+
+  <p class="eyebrow">Amina Abru &middot; PM Accelerator &middot; AI Engineer Intern</p>
+  <h1>Weather app</h1>
+  <p class="standfirst">Real current weather from Open-Meteo, saved as records you can keep, change and download. Backend track assessment.</p>
 
   <section>
     <h2>Check the weather</h2>
     <label for="search-location">Place name</label>
     <input id="search-location" type="text" placeholder="Lahore" onkeydown="if (event.key === 'Enter') checkWeather()">
     <button onclick="checkWeather()">Check weather</button>
-    <div id="weather-result" class="result"></div>
+    <div id="weather-result" class="result">
+      <p class="place" id="w-place"></p>
+      <p class="temp" id="w-temp"></p>
+      <p class="sentence" id="w-sentence"></p>
+      <a id="w-maps" href="#" target="_blank" rel="noopener">Open in Google Maps</a>
+    </div>
     <div id="weather-error" class="error"></div>
   </section>
 
@@ -124,9 +222,9 @@
   <section>
     <h2>Saved records</h2>
     <div class="toolbar">
-      <button class="secondary" onclick="loadRecords()">Refresh</button>
-      <button class="secondary" onclick="download('json')">Download JSON</button>
-      <button class="secondary" onclick="download('csv')">Download CSV</button>
+      <button class="textbtn" onclick="loadRecords()">Refresh</button>
+      <button class="textbtn" onclick="download('json')">Download JSON</button>
+      <button class="textbtn" onclick="download('csv')">Download CSV</button>
     </div>
     <div id="records-list" class="muted">Loading...</div>
   </section>
@@ -144,6 +242,11 @@
     document.getElementById(boxId).style.display = "none";
   }
 
+  function sentenceFor(d) {
+    return d.condition + " in " + d.location + ", " + d.temperature_c + " C, " +
+      "humidity " + d.humidity_percent + "%, wind " + d.wind_speed_kmh + " km/h.";
+  }
+
   async function checkWeather() {
     const location = document.getElementById("search-location").value.trim();
     const result = document.getElementById("weather-result");
@@ -159,11 +262,10 @@
       showError("weather-error", data.detail || "Something went wrong.");
       return;
     }
-    result.innerHTML =
-      "<strong>" + data.location + "</strong><br>" +
-      data.condition + " - " + data.temperature_c + " C<br>" +
-      "Humidity: " + data.humidity_percent + "% &nbsp; Wind: " + data.wind_speed_kmh + " km/h<br>" +
-      "<a href='" + data.maps_link + "' target='_blank' rel='noopener'>Open in Google Maps</a>";
+    document.getElementById("w-place").textContent = data.location;
+    document.getElementById("w-temp").textContent = data.temperature_c + " C";
+    document.getElementById("w-sentence").textContent = sentenceFor(data);
+    document.getElementById("w-maps").href = data.maps_link;
     result.style.display = "block";
   }
 
@@ -208,12 +310,13 @@
     }
     list.innerHTML = records.map(function (r) {
       return "<div class='record'>" +
-        "<strong>" + r.location + "</strong> (" + r.start_date + " to " + r.end_date + ")<br>" +
-        r.condition + " - " + r.temperature_c + " C, humidity " + r.humidity_percent +
-        "%, wind " + r.wind_speed_kmh + " km/h<br>" +
-        "<a href='" + r.maps_link + "' target='_blank' rel='noopener'>Google Maps</a>" +
-        " &nbsp; <span class='muted'>Saved " + r.saved_at + "</span><br>" +
-        "<button class='danger' onclick='deleteRecord(" + r.id + ")'>Delete</button>" +
+        "<div class='r-top'><span class='r-place'>" + r.location + "</span>" +
+        "<span class='r-temp'>" + r.temperature_c + " C</span></div>" +
+        "<div class='r-dates'>" + r.start_date + " to " + r.end_date + "</div>" +
+        "<div class='r-meta'>" + r.condition + ", humidity " + r.humidity_percent +
+        "%, wind " + r.wind_speed_kmh + " km/h &middot; Saved " + r.saved_at + "</div>" +
+        "<div class='r-actions'><a href='" + r.maps_link + "' target='_blank' rel='noopener'>Google Maps</a>" +
+        " &nbsp;&middot;&nbsp; <button onclick='deleteRecord(" + r.id + ")'>Delete</button></div>" +
         "</div>";
     }).join("");
   }
