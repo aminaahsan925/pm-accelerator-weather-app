@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App - Amina Abru | PM Accelerator</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f4f6f8;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background: #123a5c;
+    color: #fff;
+    padding: 20px 24px;
+  }
+  header h1 { margin: 0; font-size: 22px; }
+  header p { margin: 4px 0 0; font-size: 14px; color: #c9d8e5; }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+  section {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  section h2 { margin: 0 0 12px; font-size: 18px; }
+  label { display: block; font-size: 14px; margin-bottom: 4px; }
+  input {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .row { display: flex; gap: 12px; }
+  .row > div { flex: 1; }
+  button {
+    background: #123a5c;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover { background: #0d2c46; }
+  button.secondary { background: #e7ebee; color: #123a5c; }
+  button.secondary:hover { background: #d6dde3; }
+  button.danger { background: #b3261e; padding: 6px 12px; font-size: 13px; }
+  button.danger:hover { background: #8f1d17; }
+  .result {
+    background: #eef4f8;
+    border-radius: 6px;
+    padding: 14px;
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.6;
+    display: none;
+  }
+  .error {
+    background: #fdecea;
+    color: #8f1d17;
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-top: 12px;
+    font-size: 14px;
+    display: none;
+  }
+  .record {
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .record:last-child { border-bottom: none; }
+  .record strong { font-size: 15px; }
+  .record a { color: #123a5c; }
+  .toolbar { display: flex; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .muted { color: #666; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Weather App</h1>
+  <p>Amina Abru | PM Accelerator - AI Engineer Intern, Backend track</p>
+</header>
+
+<main>
+
+  <section>
+    <h2>Check the weather</h2>
+    <label for="search-location">Place name</label>
+    <input id="search-location" type="text" placeholder="Lahore" onkeydown="if (event.key === 'Enter') checkWeather()">
+    <button onclick="checkWeather()">Check weather</button>
+    <div id="weather-result" class="result"></div>
+    <div id="weather-error" class="error"></div>
+  </section>
+
+  <section>
+    <h2>Save a weather record</h2>
+    <label for="save-location">Place name</label>
+    <input id="save-location" type="text" placeholder="Lahore">
+    <div class="row">
+      <div>
+        <label for="start-date">Start date</label>
+        <input id="start-date" type="date">
+      </div>
+      <div>
+        <label for="end-date">End date</label>
+        <input id="end-date" type="date">
+      </div>
+    </div>
+    <button onclick="saveRecord()">Save record</button>
+    <div id="save-error" class="error"></div>
+  </section>
+
+  <section>
+    <h2>Saved records</h2>
+    <div class="toolbar">
+      <button class="secondary" onclick="loadRecords()">Refresh</button>
+      <button class="secondary" onclick="download('json')">Download JSON</button>
+      <button class="secondary" onclick="download('csv')">Download CSV</button>
+    </div>
+    <div id="records-list" class="muted">Loading...</div>
+  </section>
+
+</main>
+
+<script>
+  function showError(boxId, message) {
+    const box = document.getElementById(boxId);
+    box.textContent = message;
+    box.style.display = "block";
+  }
+
+  function hideError(boxId) {
+    document.getElementById(boxId).style.display = "none";
+  }
+
+  async function checkWeather() {
+    const location = document.getElementById("search-location").value.trim();
+    const result = document.getElementById("weather-result");
+    result.style.display = "none";
+    hideError("weather-error");
+    if (!location) {
+      showError("weather-error", "Please type a place name first.");
+      return;
+    }
+    const res = await fetch("/weather?location=" + encodeURIComponent(location));
+    const data = await res.json();
+    if (!res.ok) {
+      showError("weather-error", data.detail || "Something went wrong.");
+      return;
+    }
+    result.innerHTML =
+      "<strong>" + data.location + "</strong><br>" +
+      data.condition + " - " + data.temperature_c + " C<br>" +
+      "Humidity: " + data.humidity_percent + "% &nbsp; Wind: " + data.wind_speed_kmh + " km/h<br>" +
+      "<a href='" + data.maps_link + "' target='_blank' rel='noopener'>Open in Google Maps</a>";
+    result.style.display = "block";
+  }
+
+  async function saveRecord() {
+    const location = document.getElementById("save-location").value.trim();
+    const start_date = document.getElementById("start-date").value;
+    const end_date = document.getElementById("end-date").value;
+    hideError("save-error");
+    if (!location || !start_date || !end_date) {
+      showError("save-error", "Please fill in the place name and both dates.");
+      return;
+    }
+    const res = await fetch("/records", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ location, start_date, end_date })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showError("save-error", data.detail || "Something went wrong.");
+      return;
+    }
+    loadRecords();
+  }
+
+  async function deleteRecord(id) {
+    await fetch("/records/" + id, { method: "DELETE" });
+    loadRecords();
+  }
+
+  function download(format) {
+    window.location = "/export?format=" + format;
+  }
+
+  async function loadRecords() {
+    const list = document.getElementById("records-list");
+    const res = await fetch("/records");
+    const records = await res.json();
+    if (!records.length) {
+      list.innerHTML = "<p class='muted'>No records saved yet.</p>";
+      return;
+    }
+    list.innerHTML = records.map(function (r) {
+      return "<div class='record'>" +
+        "<strong>" + r.location + "</strong> (" + r.start_date + " to " + r.end_date + ")<br>" +
+        r.condition + " - " + r.temperature_c + " C, humidity " + r.humidity_percent +
+        "%, wind " + r.wind_speed_kmh + " km/h<br>" +
+        "<a href='" + r.maps_link + "' target='_blank' rel='noopener'>Google Maps</a>" +
+        " &nbsp; <span class='muted'>Saved " + r.saved_at + "</span><br>" +
+        "<button class='danger' onclick='deleteRecord(" + r.id + ")'>Delete</button>" +
+        "</div>";
+    }).join("");
+  }
+
+  loadRecords();
+</script>
+
+</body>
+</html>
